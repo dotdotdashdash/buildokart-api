@@ -1,0 +1,55 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: buildokart_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: buildokart
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: grespost
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - buildokart_nw
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: buildokart_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - buildokart_nw
+
+  # Medusa Server
+  # This service runs the Medusa backend application
+  # and the admin dashboard.
+  buildokart:
+    build: .
+    container_name: buildokart_app
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "9000:9000"
+      - "5173:5173"
+    env_file:
+      - .env
+    volumes:
+      - .:/server
+      - /server/node_modules
+    networks:
+      - buildokart_nw
+
+volumes:
+  postgres_data:
+  node_modules:
+
+networks:
+  buildokart_nw:
+    
