@@ -1,0 +1,47 @@
+name: Deploy Buildokart API
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install & Build
+        run: |
+          npm install -g pnpm
+          pnpm install
+          pnpm medusa build
+
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.DO_ENV_FILE }}" > .medusa/server/.env
+
+      - name: Copy build to Droplet
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+          source: ".medusa/server/*, .medusa/server/.env"
+          target: "/buildokart-prod/api"
+          strip_components: 2
+
+      - name: Restart Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+          script: |
+            cd /buildokart-prod/api
+            /root/.nvm/versions/node/v22.22.0/bin/pnpm install --prod --frozen-lockfile
+            /root/.nvm/versions/node/v22.22.0/bin/pm2 restart buildokart-api
