@@ -1,0 +1,13 @@
+---
+alwaysApply: true
+---
+
+---
+description: Standards for Database operations and migrations
+globs: src/modules/**/migrations/*.ts, src/modules/**/models/*.ts
+---
+# Database Standards
+
+- **No Manual SQL**: Always use the Medusa Data Model API.
+- **Migrations**: Generate migrations using `npx medusa db:generate [module-name]`. Never manually edit auto-generated migration files unless adding custom indexes.
+- **Links**: When connecting two models from different modules, use `defineLink` in a dedicated `links.ts` file.

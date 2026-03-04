@@ -1,0 +1,15 @@
+---
+alwaysApply: true
+---
+
+---
+description: Standards for Medusa Modules and Data Models
+globs: src/modules/**/*.ts
+---
+# Medusa Module Standards
+
+- **Data Models**: Use the `model.define` utility from `@medusajs/framework/utils`. Do not use raw TypeORM decorators.
+- **Dependency Injection**: Use the `InjectedDependencies` type pattern in service constructors.
+- **Container Resolution**: Resolve services using `container.resolve("moduleName")`. 
+- **Module Isolation**: Modules should not directly import from other modules. Use the **Remote Link** pattern for cross-module relationships.
+- **Naming**: Module services should end in `Service` (e.g., `BrandModuleService`).

@@ -1,0 +1,17 @@
+---
+alwaysApply: true
+---
+
+---
+description: Rules for REST API Routes and Middlewares
+globs: src/api/**/*.ts
+---
+# Medusa API Standards
+
+- **Type Safety**: Always use `MedusaRequest` and `MedusaResponse` from `@medusajs/framework/http`.
+- **Validation**: Use `zod` for request body validation. Register validation middleware in `middlewares.ts`.
+- **Authentication**: Use `authenticate("admin" | "store")` middleware for protected routes.
+- **Standard Responses**: 
+    - Success: `res.json({ [entity_name]: data })`
+    - Errors: Use `MedusaError` from `@medusajs/utils`.
+- **No Direct DB Access**: Use the `query` or `modules` resolved from `req.scope` to interact with data.

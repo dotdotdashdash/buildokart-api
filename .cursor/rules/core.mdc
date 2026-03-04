@@ -1,0 +1,14 @@
+---
+alwaysApply: true
+---
+
+---
+description: Global project standards and AI tool usage
+globs: **/*
+---
+# Core Project Rules
+
+- **Medusa v2 Documentation**: When writing logic for Workflows, Modules, or API routes, always use the `Medusa Docs` MCP server via the `ask_medusa_question` tool to verify current v2 syntax.
+- **Code Completeness**: Do not provide "placeholders" or "TODO" comments. If you are unsure of a dependency, ask for clarification instead of guessing.
+- **Project Structure**: This is a monorepo-style setup. Ensure backend logic stays in the backend repo and frontend logic stays in the Next.js repo.
+- **No Hallucinations**: If a Medusa module or utility is not found in the official documentation, do not invent it.

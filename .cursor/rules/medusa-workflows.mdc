@@ -1,0 +1,15 @@
+---
+alwaysApply: true
+---
+
+---
+description: Rules for creating and using Medusa Workflows
+globs: src/workflows/**/*.ts, src/api/**/*.ts
+---
+# Medusa Workflow Standards
+
+- **Logic Separation**: API routes must only parse input and execute a workflow. NO business logic in `src/api`.
+- **Atomic Steps**: Use `createStep` for individual tasks (e.g., "Update DB", "Send Email").
+- **Rollback Logic**: Every step that performs a write operation MUST have a compensation function (the second argument to `createStep`).
+- **Input/Output**: Use `StepResponse` to return data from steps.
+- **Workflow Constructor**: Use `createWorkflow` to orchestrate steps. Never call services directly inside the workflow constructor; only call steps.
